@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <title>Ultimate Guitar Tabs</title>
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <h1>Ultimate Guitar Tabs</h1>
+
+  <section>
+    <h3>Add a tab</h3>
+    <form id="add_form">
+      <table>
+        <tr>
+          <td><label>Link: </label><input required id="add_link" placeholder="https://tabs.ultimate-guitar.com/..." /></td>
+          <td><label>Genres: </label><input required id="add_genre" placeholder="Pop, Jazz, ..." /></td>
+          <td><button id="add_submit">Submit</button></td>
+        </tr>
+      </table>
+    </form>
+  </section>
+
+  <section>
+    <h3>Search for Tabs</h3>
+    <label>Search: </label><input id="search_input" placeholder="Adele" />
+  </section>
+
+  <section>
+    <h3>Random Tab</h3>
+    <button id="random_tab">Get a Random Tab</button>
+    <div id="random_tab_result"></div>
+  </section>
+
+  <h2>Tabs</h2>
+  <section id="tabs"></section>
+
+  <script src="./renderer.js"></script>
+</body>
+
+</html>
