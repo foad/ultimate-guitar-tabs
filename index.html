@@ -3,42 +3,59 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
   <title>Ultimate Guitar Tabs</title>
 
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.purple-deep_purple.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-  <h1>Ultimate Guitar Tabs</h1>
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">Ultimate Guitar Tabs</span>
+    </div>
+  </header>
 
   <section>
-    <h3>Add a tab</h3>
     <form id="add_form">
-      <table>
-        <tr>
-          <td><label>Link: </label><input required id="add_link" placeholder="https://tabs.ultimate-guitar.com/..." /></td>
-          <td><label>Genres: </label><input required id="add_genre" placeholder="Pop, Jazz, ..." /></td>
-          <td><button id="add_submit">Submit</button></td>
-        </tr>
-      </table>
+      <h5>Add a tab: </h5>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <label class="mdl-textfield__label" for="add_link">Link</label>
+        <input class="mdl-textfield__input" data-required id="add_link" />
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <label class="mdl-textfield__label" for="add_genre">Genres</label>
+        <input class="mdl-textfield__input" data-required id="add_genre" />
+      </div>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="add_submit">Submit</button>
     </form>
   </section>
 
-  <section>
-    <h3>Search for Tabs</h3>
-    <label>Search: </label><input id="search_input" placeholder="Adele" />
-  </section>
+  <hr />
 
   <section>
-    <h3>Random Tab</h3>
-    <button id="random_tab">Get a Random Tab</button>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <label class="mdl-textfield__label" for="search_input">Search</label>
+      <input class="mdl-textfield__input" data-required id="search_input" />
+    </div>
+  </section>
+
+  <hr />
+
+  <section>
     <div id="random_tab_result"></div>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="random_tab">New Random Tab</button>
   </section>
 
-  <h2>Tabs</h2>
-  <section id="tabs"></section>
+  <hr />
+
+  <section>
+    <h4>Tabs</h4>
+  <div id="tabs"></div>
+  </section>
 
   <script src="./renderer.js"></script>
 </body>

@@ -7,14 +7,18 @@ let tabs = [];
 const initialiseApp = () => {
   tabs = JSON.parse(fs.readFileSync(tabsFile));
   renderTable(tabs);
+  generateRandomTab();
 };
 
 const renderTable = (_tabs) => {
   const tabsEl = document.getElementById('tabs');
   const tableEl = document.createElement('table');
+  tableEl.className = 'mdl-data-table mdl-js-data-table';
+  const tableBodyEl = document.createElement('tbody');
+  tableEl.appendChild(tableBodyEl);
 
   _tabs.forEach((tab, index) => {
-    createTableRow(tableEl, tab, index);
+    createTableRow(tableBodyEl, tab, index);
   });
 
   tabsEl.innerHTML = '';
@@ -30,13 +34,16 @@ const createTableRow = (table, tab, index) => {
   tr.insertCell(-1).innerHTML = tab.title;
 
   const link = document.createElement('button');
+  link.className = 'mdl-button mdl-js-button mdl-button--icon mdl-button--accent';
   link.addEventListener('click', () => {
     shell.openExternal(tab.link);
   });
-  link.innerHTML = '[OPEN]';
+  link.innerHTML = '<i class="material-icons">link</i>';
   tr.insertCell(-1).appendChild(link);
 
   createGenreCell(tr, tab, index);
+
+  tr.querySelectorAll('td').forEach(td => td.className = 'mdl-data-table__cell--non-numeric');
 };
 
 const createGenreCell = (tr, tab, index) => {
@@ -44,18 +51,31 @@ const createGenreCell = (tr, tab, index) => {
     tabs[index].genre = [];
     writeTabs();
   }
+  const inputContainer = document.createElement('div');
+  inputContainer.className = 'mdl-textfield mdl-js-textfield';
+
+  const inputLabel = document.createElement('label');
+  inputLabel.className = 'mdl-textfield__label';
+  inputLabel.for = 'genre_' + index;
+  inputLabel.innerHTML = 'Pop, Jazz, ...'
+
   const input = document.createElement('input');
-  input.placeholder = 'Pop, Jazz, ...';
+  input.className = 'mdl-textfield__input';
   input.id = 'genre_' + index;
   if (tab.genre.length !== 0) input.value = tab.genre.join(', ');
   input.addEventListener('keyup', editGenre(index));
-  tr.insertCell(-1).appendChild(input);
+
+  inputContainer.appendChild(inputLabel);
+  inputContainer.appendChild(input);
+
+  tr.insertCell(-1).appendChild(inputContainer);
 };
 
 const createDeleteCell = (tr, index) => {
   const del = document.createElement('button');
-  del.innerHTML = 'X';
+  del.innerHTML = '<i class="material-icons">delete</i>';
   del.id = 'delete_' + index;
+  del.className = 'mdl-button mdl-js-button mdl-button--icon mdl-button--colored';
   del.addEventListener('click', deleteTab(index));
   tr.insertCell(-1).appendChild(del);
 };
@@ -91,12 +111,33 @@ const getDetails = link => {
   return [artist, title];
 };
 
+generateRandomTab = () => {
+  const resultEl = document.getElementById('random_tab_result');
+  const tableEl = document.createElement('table');
+  tableEl.className = 'mdl-data-table mdl-js-data-table';
+  const tableBodyEl = document.createElement('tbody');
+  tableEl.appendChild(tableBodyEl);
+
+  const randomTab = tabs[Math.floor(Math.random() * tabs.length)];
+  createTableRow(tableBodyEl, randomTab, 0);
+
+  const del = tableEl.querySelector('[id^=delete_]');
+  del.parentNode.removeChild(del);
+
+  resultEl.innerHTML = '';
+  resultEl.appendChild(tableEl);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   initialiseApp();
+  document.querySelectorAll('input[data-required=true]').forEach(el => el.required = true);
 });
 
 document.getElementById('add_form').addEventListener('submit', event => {
   event.preventDefault();
+
+  document.getElementById('add_form').reset();
+
   return false;
 });
 
@@ -109,6 +150,8 @@ document.getElementById('search_input').addEventListener('keyup', event => {
   }
 
   const terms = search.split(',').map(term => term.toLowerCase().trim()).filter(t => t.length);
+
+  if (!terms || terms.length === 0) return;
 
   const _tabs = tabs.filter(tab => {
     let matches = [];
@@ -126,15 +169,7 @@ document.getElementById('search_input').addEventListener('keyup', event => {
   renderTable(_tabs);
 });
 
-document.getElementById('random_tab').addEventListener('click', () => {
-  const resultEl = document.getElementById('random_tab_result');
-  const tableEl = document.createElement('table');
-  const randomTab = tabs[Math.floor(Math.random() * tabs.length)];
-  createTableRow(tableEl, randomTab, 0);
-
-  resultEl.innerHTML = '';
-  resultEl.appendChild(tableEl);
-});
+document.getElementById('random_tab').addEventListener('click', generateRandomTab);
 
 document.getElementById('add_submit').addEventListener('click', () => {
   const link = document.getElementById('add_link').value;

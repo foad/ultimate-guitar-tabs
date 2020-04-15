@@ -2,8 +2,8 @@ const { app, BrowserWindow } = require('electron');
 
 function createWindow () {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1332,
+    height: 1080,
     webPreferences: {
       allowRunningInsecureContent: true,
       nodeIntegration: true,
@@ -12,7 +12,7 @@ function createWindow () {
 
   mainWindow.loadFile('index.html');
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(createWindow);

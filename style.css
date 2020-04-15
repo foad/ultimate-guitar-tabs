@@ -1,3 +1,29 @@
-* {
-  font-family: sans-serif;
+body {
+  padding-bottom: 32px;
+}
+section {
+  padding: 0 32px;
+}
+hr {
+  border: 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+#tabs table, #random_tab_result table {
+  width: 100%;
+}
+#random_tab_result {
+  margin-bottom: 16px;
+}
+#add_form .mdl-textfield {
+  margin-right: 32px;
+}
+#add_form h5 {
+  display: inline-block;
+  margin-right: 32px;
+}
+.mdl-data-table td {
+  padding: 0 18px;
+}
+.mdl-data-table .mdl-textfield {
+  padding: 0;
 }
