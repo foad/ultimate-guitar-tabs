@@ -1,6 +1,6 @@
 {
   "name": "ultimate-guitar-tabs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Tab organiser for ultimate guitar tabs",
   "main": "main.js",
   "scripts": {
@@ -18,7 +18,7 @@
       "target": "NSIS"
     }
   },
-  "author": "GitHub",
+  "author": "Dan Foad",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^8.2.2",
