@@ -17,7 +17,9 @@
     "win": {
       "target": "NSIS"
     },
-    "publish": ["github"]
+    "publish": [
+      "github"
+    ]
   },
   "author": "Dan Foad",
   "license": "CC0-1.0",
