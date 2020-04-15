@@ -17,7 +17,8 @@ const renderTable = (_tabs) => {
   const tableBodyEl = document.createElement('tbody');
   tableEl.appendChild(tableBodyEl);
 
-  _tabs.forEach((tab, index) => {
+  _tabs.forEach((tab) => {
+    const index = tabs.findIndex(t => t.link === tab.link);
     createTableRow(tableBodyEl, tab, index);
   });
 
@@ -25,10 +26,10 @@ const renderTable = (_tabs) => {
   tabsEl.appendChild(tableEl);
 }
 
-const createTableRow = (table, tab, index) => {
+const createTableRow = (table, tab, index, isRandomTab) => {
   const tr = table.insertRow(-1);
 
-  createDeleteCell(tr, index);
+  if (!isRandomTab) createDeleteCell(tr, index);
 
   tr.insertCell(-1).innerHTML = tab.artist;
   tr.insertCell(-1).innerHTML = tab.title;
@@ -41,12 +42,12 @@ const createTableRow = (table, tab, index) => {
   link.innerHTML = '<i class="material-icons">link</i>';
   tr.insertCell(-1).appendChild(link);
 
-  createGenreCell(tr, tab, index);
+  createGenreCell(tr, tab, index, isRandomTab);
 
   tr.querySelectorAll('td').forEach(td => td.className = 'mdl-data-table__cell--non-numeric');
 };
 
-const createGenreCell = (tr, tab, index) => {
+const createGenreCell = (tr, tab, index, isRandomTab) => {
   if (!tab.genre) {
     tabs[index].genre = [];
     writeTabs();
@@ -61,9 +62,13 @@ const createGenreCell = (tr, tab, index) => {
 
   const input = document.createElement('input');
   input.className = 'mdl-textfield__input';
-  input.id = 'genre_' + index;
+  if (isRandomTab) {
+    input.id = 'genre_random_' + index;
+  } else {
+    input.id = 'genre_' + index;
+  }
   if (tab.genre.length !== 0) input.value = tab.genre.join(', ');
-  input.addEventListener('keyup', editGenre(index));
+  input.addEventListener('keyup', editGenre(index, isRandomTab));
 
   inputContainer.appendChild(inputLabel);
   inputContainer.appendChild(input);
@@ -80,9 +85,16 @@ const createDeleteCell = (tr, index) => {
   tr.insertCell(-1).appendChild(del);
 };
 
-const editGenre = index => event => {
-  const rawGenres = document.getElementById('genre_' + index).value;
+const editGenre = (index, isRandomTab) => event => {
+  const id = isRandomTab ? 'genre_random_' + index : 'genre_' + index;
+  const rawGenres = document.getElementById(id).value;
   tabs[index].genre = convertGenres(rawGenres);
+
+  if (isRandomTab) {
+    updateSearchResults();
+  } else if (document.getElementById('genre_random_' + index)) {
+    document.getElementById('genre_random_' + index).value = rawGenres;
+  }
 
   writeTabs();
 }
@@ -118,30 +130,15 @@ generateRandomTab = () => {
   const tableBodyEl = document.createElement('tbody');
   tableEl.appendChild(tableBodyEl);
 
-  const randomTab = tabs[Math.floor(Math.random() * tabs.length)];
-  createTableRow(tableBodyEl, randomTab, 0);
-
-  const del = tableEl.querySelector('[id^=delete_]');
-  del.parentNode.removeChild(del);
+  const randomIndex = Math.floor(Math.random() * tabs.length);
+  const randomTab = tabs[randomIndex];
+  createTableRow(tableBodyEl, randomTab, randomIndex, true);
 
   resultEl.innerHTML = '';
   resultEl.appendChild(tableEl);
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  initialiseApp();
-  document.querySelectorAll('input[data-required=true]').forEach(el => el.required = true);
-});
-
-document.getElementById('add_form').addEventListener('submit', event => {
-  event.preventDefault();
-
-  document.getElementById('add_form').reset();
-
-  return false;
-});
-
-document.getElementById('search_input').addEventListener('keyup', event => {
+updateSearchResults = () => {
   const search = document.getElementById('search_input').value;
 
   if (search.length === 0) {
@@ -167,7 +164,22 @@ document.getElementById('search_input').addEventListener('keyup', event => {
   });
 
   renderTable(_tabs);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  initialiseApp();
+  document.querySelectorAll('input[data-required=true]').forEach(el => el.required = true);
 });
+
+document.getElementById('add_form').addEventListener('submit', event => {
+  event.preventDefault();
+
+  document.getElementById('add_form').reset();
+
+  return false;
+});
+
+document.getElementById('search_input').addEventListener('keyup', updateSearchResults);
 
 document.getElementById('random_tab').addEventListener('click', generateRandomTab);
 
